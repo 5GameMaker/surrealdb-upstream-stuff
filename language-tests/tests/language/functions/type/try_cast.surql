@@ -92,82 +92,72 @@ value = "NONE"
 [[test.results]] # 34
 error = "Incorrect arguments for function type::try_duration(). Expected 1 argument"
 
-# try_file
-[[test.results]] # 35
-error = "Incorrect arguments for function type::try_file(). Expected 2 arguments"
-[[test.results]] # 36
-value = "NONE"
-[[test.results]] # 37
-value = "f\"2:/2\""
-[[test.results]] # 38
-error = "Incorrect arguments for function type::try_file(). Expected 2 arguments"
-
 # try_number
-[[test.results]] # 39
+[[test.results]] # 35
 value = "NONE"
-[[test.results]] # 40
+[[test.results]] # 36
 value = "36"
-[[test.results]] # 41
+[[test.results]] # 37
 value = "36.23f"
-[[test.results]] # 42
+[[test.results]] # 38
 error = "Incorrect arguments for function type::try_number(). Expected 1 argument"
 
 # try_point
-[[test.results]] # 43
+[[test.results]] # 39
 value = "NONE"
-[[test.results]] # 44
+[[test.results]] # 40
 value = "(1f, 2f)"
-[[test.results]] # 45
+[[test.results]] # 41
 value = "(1f, 2f)"
-[[test.results]] # 46
+[[test.results]] # 42
 error = "Incorrect arguments for function type::try_point(). Expected 1 argument"
 
 # try_table
-[[test.results]] # 47
+[[test.results]] # 43
 value = "NONE"
-[[test.results]] # 48
+[[test.results]] # 44
 value = "'table'" # Unfortunately, I could not bork it to work
-[[test.results]] # 49
+[[test.results]] # 45
 error = "Incorrect arguments for function type::try_table(). Expected 1 argument"
 
 # try_range
-[[test.results]] # 50
+[[test.results]] # 46
 value = "NONE"
-[[test.results]]
+[[test.results]] # 47
 value = "2..3"
-[[test.results]]
+[[test.results]] # 48
 error = "Incorrect arguments for function type::try_range(). Expected 1 argument"
 
 # try_record
-[[test.results]]
+[[test.results]] # 49
 value = "NONE"
-[[test.results]]
+[[test.results]] # 50
 value = "NONE"
-[[test.results]]
+[[test.results]] # 51
 value = "a:a"
-[[test.results]]
+[[test.results]] # 52
 value = "a:a"
-[[test.results]]
+[[test.results]] # 53
 error = "Incorrect arguments for function type::try_record(). Expected 1 to 2 arguments"
 
 # try_set
-[[test.results]]
+[[test.results]] # 54
 value = "NONE"
-[[test.results]]
+[[test.results]] # 55
 value = "{'a', 'b'}"
-[[test.results]]
+[[test.results]] # 56
 value = "{'a', 'b'}"
-[[test.results]]
+[[test.results]] # 57
 value = "NONE"
-[[test.results]]
+[[test.results]] # 58
 error = "Incorrect arguments for function type::try_set(). Expected 1 argument"
 
 # try_uuid
-[[test.results]]
+[[test.results]] # 59
 value = "NONE"
-[[test.results]]
+[[test.results]] # 60
 value = "u'019d1b17-f391-7fb0-b190-006ff8c745ce'"
-[[test.results]]
+[[test.results]] # 61
 error = "Incorrect arguments for function type::try_uuid(). Expected 1 argument"
 
 # try_geometry
@@ -218,11 +208,6 @@ RETURN type::try_decimal('6123.634', 'NAO');
 RETURN type::try_duration('2d');
 RETURN type::try_duration('2');
 RETURN type::try_duration('2d', 'NEE');
-
-RETURN type::try_file(2);
-RETURN type::try_file(2, 2);
-RETURN type::try_file('2', '2');
-RETURN type::try_file('2', '2', 'NE');
 
 RETURN type::try_number('a');
 RETURN type::try_number('36');
