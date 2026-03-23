@@ -326,10 +326,7 @@ pub mod r#try {
 				table: TableName::new(arg1.into_raw_string()),
 			})),
 
-			(arg1, None) => Ok(arg1
-				.cast_to::<RecordId>()
-				.map(Value::from)
-				.unwrap_or(Value::None)),
+			(arg1, None) => Ok(arg1.cast_to::<RecordId>().map(Value::from).unwrap_or(Value::None)),
 		}
 	}
 

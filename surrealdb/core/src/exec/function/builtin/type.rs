@@ -236,7 +236,6 @@ pub fn register(registry: &mut FunctionRegistry) {
 		TypeStringLossy,
 		TypeTable,
 		TypeUuid,
-
 		TypeIsArray,
 		TypeIsBool,
 		TypeIsBytes,
@@ -262,7 +261,6 @@ pub fn register(registry: &mut FunctionRegistry) {
 		TypeIsSet,
 		TypeIsString,
 		TypeIsUuid,
-
 		TypeTryArray,
 		TypeTryBool,
 		TypeTryBytes,
