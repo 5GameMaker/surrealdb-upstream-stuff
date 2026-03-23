@@ -434,8 +434,6 @@ pub(crate) static PATHS: phf::Map<
 		UniCase::ascii("type::try_datetime") => (PathKind::Function, None),
 		UniCase::ascii("type::try_decimal") => (PathKind::Function, None),
 		UniCase::ascii("type::try_duration") => (PathKind::Function, None),
-		UniCase::ascii("type::try_field") => (PathKind::Function, None),
-		UniCase::ascii("type::try_fields") => (PathKind::Function, None),
 		UniCase::ascii("type::try_file") => (PathKind::Function, None),
 		UniCase::ascii("type::try_float") => (PathKind::Function, None),
 		UniCase::ascii("type::try_geometry") => (PathKind::Function, None),
