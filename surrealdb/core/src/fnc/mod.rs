@@ -88,6 +88,7 @@ pub async fn run(
 		|| name.eq("type::field")
 		|| name.eq("type::fields")
 		|| name.eq("value::diff")
+		|| name.eq("value::expect")
 		|| name.eq("value::patch")
 		|| name.eq("sequence::nextval")
 		|| name.starts_with("api")
@@ -665,6 +666,7 @@ pub async fn asynchronous(
 		"type::fields" => r#type::fields((stk, ctx, Some(opt), doc)).await,
 		//
 		"value::diff" => value::diff.await,
+		"value::expect" => value::expect((stk, ctx, Some(opt), doc)).await,
 		"value::patch" => value::patch.await,
 		"schema::table::exists" => schema::table::exists((ctx, Some(opt))).await,
 	)
@@ -779,6 +781,7 @@ pub async fn idiom(
 				"try_uuid" => r#type::r#try::uuid,
 				//
 				"chain" => value::chain((stk, ctx, Some(opt), doc)).await,
+				"expect" => value::expect((stk, ctx, Some(opt), doc)).await,
 				"diff" => value::diff.await,
 				"patch" => value::patch.await,
 				//
@@ -940,6 +943,7 @@ pub async fn idiom(
 				"try_uuid" => r#type::r#try::uuid,
 				//
 				"chain" => value::chain((stk, ctx, Some(opt), doc)).await,
+				"expect" => value::expect((stk, ctx, Some(opt), doc)).await,
 				"diff" => value::diff.await,
 				"patch" => value::patch.await,
 				//
@@ -1020,6 +1024,7 @@ pub async fn idiom(
 				"try_uuid" => r#type::r#try::uuid,
 				//
 				"chain" => value::chain((stk, ctx, Some(opt), doc)).await,
+				"expect" => value::expect((stk, ctx, Some(opt), doc)).await,
 				"diff" => value::diff.await,
 				"patch" => value::patch.await,
 				//
@@ -1108,6 +1113,7 @@ pub async fn idiom(
 				"try_uuid" => r#type::r#try::uuid,
 				//
 				"chain" => value::chain((stk, ctx, Some(opt), doc)).await,
+				"expect" => value::expect((stk, ctx, Some(opt), doc)).await,
 				"diff" => value::diff.await,
 				"patch" => value::patch.await,
 				//
@@ -1195,6 +1201,7 @@ pub async fn idiom(
 				"try_uuid" => r#type::r#try::uuid,
 				//
 				"chain" => value::chain((stk, ctx, Some(opt), doc)).await,
+				"expect" => value::expect((stk, ctx, Some(opt), doc)).await,
 				"diff" => value::diff.await,
 				"patch" => value::patch.await,
 				//
@@ -1279,6 +1286,7 @@ pub async fn idiom(
 				"try_uuid" => r#type::r#try::uuid,
 				//
 				"chain" => value::chain((stk, ctx, Some(opt), doc)).await,
+				"expect" => value::expect((stk, ctx, Some(opt), doc)).await,
 				"diff" => value::diff.await,
 				"patch" => value::patch.await,
 				//
@@ -1366,6 +1374,7 @@ pub async fn idiom(
 				"try_uuid" => r#type::r#try::uuid,
 				//
 				"chain" => value::chain((stk, ctx, Some(opt), doc)).await,
+				"expect" => value::expect((stk, ctx, Some(opt), doc)).await,
 				"diff" => value::diff.await,
 				"patch" => value::patch.await,
 				//
@@ -1464,6 +1473,7 @@ pub async fn idiom(
 				"try_uuid" => r#type::r#try::uuid,
 				//
 				"chain" => value::chain((stk, ctx, Some(opt), doc)).await,
+				"expect" => value::expect((stk, ctx, Some(opt), doc)).await,
 				"diff" => value::diff.await,
 				"patch" => value::patch.await,
 				//
@@ -1597,6 +1607,7 @@ pub async fn idiom(
 				"try_uuid" => r#type::r#try::uuid,
 				//
 				"chain" => value::chain((stk, ctx, Some(opt), doc)).await,
+				"expect" => value::expect((stk, ctx, Some(opt), doc)).await,
 				"diff" => value::diff.await,
 				"patch" => value::patch.await,
 			)
@@ -1700,6 +1711,7 @@ pub async fn idiom(
 				"try_uuid" => r#type::r#try::uuid,
 				//
 				"chain" => value::chain((stk, ctx, Some(opt), doc)).await,
+				"expect" => value::expect((stk, ctx, Some(opt), doc)).await,
 				"diff" => value::diff.await,
 				"patch" => value::patch.await,
 				//
@@ -1792,6 +1804,7 @@ pub async fn idiom(
 				"try_uuid" => r#type::r#try::uuid,
 				//
 				"chain" => value::chain((stk, ctx, Some(opt), doc)).await,
+				"expect" => value::expect((stk, ctx, Some(opt), doc)).await,
 				"diff" => value::diff.await,
 				"patch" => value::patch.await,
 				//
@@ -1871,6 +1884,7 @@ pub async fn idiom(
 				"try_uuid" => r#type::r#try::uuid,
 				//
 				"chain" => value::chain((stk, ctx, Some(opt), doc)).await,
+				"expect" => value::expect((stk, ctx, Some(opt), doc)).await,
 				"diff" => value::diff.await,
 				"patch" => value::patch.await,
 				//
@@ -1991,6 +2005,7 @@ fn idiom_name_to_normal(kind: &str, name: &str) -> String {
 mod tests {
 	use regex::Regex;
 
+	use crate::cnf::CommonConfig;
 	use crate::dbs::Capabilities;
 	use crate::sql::{Expr, Function};
 
@@ -2025,8 +2040,11 @@ mod tests {
 			let (quote, _) = line.split_once("=>").unwrap();
 			let name = quote.trim().trim_matches('"');
 
-			let res =
-				crate::syn::expr_with_capabilities(&format!("{}()", name), &Capabilities::all());
+			let res = crate::syn::expr_with_capabilities(
+				&format!("{}()", name),
+				&Capabilities::all(),
+				&CommonConfig::default(),
+			);
 
 			if let Ok(Expr::FunctionCall(call)) = res {
 				match call.receiver {

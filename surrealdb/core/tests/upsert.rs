@@ -1,3 +1,4 @@
+#![recursion_limit = "256"]
 #![allow(clippy::unwrap_used)]
 
 use surrealdb_core::iam::Level;
@@ -163,13 +164,8 @@ async fn common_permissions_checks(auth_enabled: bool) {
 				assert!(res.unwrap() == Value::Array(Array::new()), "{}", msg);
 			} else {
 				// Not allowed to create a table
-				let err = res.unwrap_err().to_string();
-				assert!(
-					err.contains("Not enough permissions to perform this action"),
-					"{}: {}",
-					msg,
-					err
-				)
+				let err = res.unwrap_err();
+				assert!(err.is_not_allowed(), "{msg}: expected NotAllowed, got {err}")
 			}
 		}
 

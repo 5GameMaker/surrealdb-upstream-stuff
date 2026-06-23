@@ -2,6 +2,7 @@ use std::borrow::Cow;
 use std::collections::HashMap;
 use std::future::IntoFuture;
 use std::pin::Pin;
+use std::sync::Arc;
 use std::task::{Context, Poll};
 
 use futures::StreamExt;
@@ -21,7 +22,8 @@ use crate::notification::Notification;
 use crate::types::{SurrealValue, Value, Variables};
 use crate::{Connection, Error, Result, Surreal, opt};
 
-/// A query future
+/// Returned by [`Surreal::query`](crate::Surreal::query), resolving to [`IndexedResults`]
+/// (optionally via [`Query::with_stats`](Self::with_stats)).
 #[derive(Debug)]
 #[must_use = "futures do nothing unless you `.await` or poll them"]
 pub struct Query<'r, C: Connection> {
@@ -171,7 +173,11 @@ where
 						)
 						.await
 						.map(|rx| {
-							Stream::new(client.inner.clone().into(), live_query_id.into(), Some(rx))
+							Stream::new(
+								Arc::clone(&client.inner).into(),
+								live_query_id.into(),
+								Some(rx),
+							)
 						});
 						indexed_results.live_queries.insert(index, live_stream);
 						indexed_results
@@ -269,7 +275,8 @@ where
 	}
 }
 
-/// The response type of a `Surreal::query` request
+/// Map of per-statement results from [`Surreal::query`](crate::Surreal::query); read rows with
+/// [`IndexedResults::take`](IndexedResults::take).
 #[derive(Debug)]
 pub struct IndexedResults {
 	pub(crate) results: IndexMap<usize, (DbResultStats, std::result::Result<Value, TypesError>)>,
@@ -311,14 +318,14 @@ impl IndexedResults {
 	/// Returns a mutable reference to the `Ok` value at the given index.
 	/// If the result is an error, the entry is removed and the error is returned.
 	/// Returns `Ok(None)` if no entry exists at the index.
-	pub(crate) fn try_get_value_mut(&mut self, index: &usize) -> Result<Option<&mut Value>> {
-		if matches!(self.results.get(index), Some((_, Err(_)))) {
-			let Some((_, Err(err))) = self.results.swap_remove(index) else {
+	pub(crate) fn try_get_value_mut(&mut self, index: usize) -> Result<Option<&mut Value>> {
+		if matches!(self.results.get(&index), Some((_, Err(_)))) {
+			let Some((_, Err(err))) = self.results.swap_remove(&index) else {
 				unreachable!()
 			};
 			return Err(err);
 		}
-		match self.results.get_mut(index) {
+		match self.results.get_mut(&index) {
 			Some((_, Ok(val))) => Ok(Some(val)),
 			_ => Ok(None),
 		}

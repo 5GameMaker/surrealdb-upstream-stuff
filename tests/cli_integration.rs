@@ -39,6 +39,29 @@ mod cli_integration {
 		common::run("--version").output().unwrap();
 	}
 
+	#[cfg(feature = "surrealism")]
+	#[test]
+	fn module_version_command() {
+		let output = common::run("module version").output().unwrap();
+		assert!(output.contains(surrealism_runtime::SDK_VERSION));
+	}
+
+	#[cfg(feature = "surrealism")]
+	#[test]
+	fn module_version_flag_short() {
+		let output = common::run("module -V").output().unwrap();
+		assert!(output.contains("Surrealism command-line interface"));
+		assert!(output.contains(surrealism_runtime::SDK_VERSION));
+	}
+
+	#[cfg(feature = "surrealism")]
+	#[test]
+	fn module_version_flag_long() {
+		let output = common::run("module --version").output().unwrap();
+		assert!(output.contains("Surrealism command-line interface"));
+		assert!(output.contains(surrealism_runtime::SDK_VERSION));
+	}
+
 	#[test]
 	fn help_command() {
 		common::run("help").output().unwrap();
@@ -214,10 +237,12 @@ mod cli_integration {
 				.output()
 				.unwrap();
 
+			// BEGIN batch: failed txn, then cancelled (skipped stmts), then explicit COMMIT error
+			// (#7207).
 			assert_eq!(
 				output.lines().filter(|s| s.contains("transaction")).count(),
-				3,
-				"missing failed txn errors in {output:?}"
+				4,
+				"missing txn-related errors in {output:?}"
 			);
 			assert!(output.contains("rgument"), "missing argument error in {output}");
 		}
